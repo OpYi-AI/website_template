@@ -7,7 +7,7 @@ import Link from "next/link";
 import { Button } from "./button";
 import { useCalEmbed } from "@/app/hooks/useCalEmbed";
 import { CONSTANTS } from "@/constants/links";
-import { TimelineDemo } from "@/components/ui/timeline-demo";
+import { TimelineDemo } from "./ui/timeline-demo";
 
 export function Hero() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -139,7 +139,7 @@ export function Hero() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4, delay: 0.9, ease: "easeOut" }}
         ref={containerRef}
-        className="relative mx-auto max-w-7xl w-full"
+        className="relative mx-auto max-w-7xl w-full z-20"
       >
         <TimelineDemo />
       </motion.div>
