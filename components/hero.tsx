@@ -139,11 +139,9 @@ export function Hero() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4, delay: 0.9, ease: "easeOut" }}
         ref={containerRef}
-        className="relative mx-auto max-w-7xl rounded-[32px] border border-neutral-200/50 bg-neutral-100 p-2 backdrop-blur-lg dark:border-neutral-700 dark:bg-neutral-800/50 md:p-4 min-h-[600px]"
+        className="relative mx-auto max-w-7xl w-full"
       >
-        <div className="rounded-[24px] border border-neutral-200 bg-white p-0 dark:border-neutral-700 dark:bg-black overflow-hidden h-full">
-          <TimelineDemo />
-        </div>
+        <TimelineDemo />
       </motion.div>
     </div>
   );
