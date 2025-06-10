@@ -9,7 +9,6 @@ import { useCalEmbed } from "@/app/hooks/useCalEmbed";
 import { CONSTANTS } from "@/constants/links";
 
 export function Hero() {
-  const containerRef = useRef<HTMLDivElement>(null);
   const parentRef = useRef<HTMLDivElement>(null);
   const calOptions = useCalEmbed({
     namespace: CONSTANTS.CALCOM_NAMESPACE,
@@ -34,7 +33,6 @@ export function Hero() {
           duration: 7,
           repeatDelay: 3,
         }}
-        containerRef={containerRef}
         parentRef={parentRef}
       />
       <CollisionMechanism
@@ -44,7 +42,6 @@ export function Hero() {
           duration: 4,
           repeatDelay: 3,
         }}
-        containerRef={containerRef}
         parentRef={parentRef}
       />
       <CollisionMechanism
@@ -54,18 +51,16 @@ export function Hero() {
           duration: 5,
           repeatDelay: 3,
         }}
-        containerRef={containerRef}
         parentRef={parentRef}
       />
       <CollisionMechanism
-        containerRef={containerRef}
-        parentRef={parentRef}
         beamOptions={{
           initialX: 400,
           translateX: 1400,
           duration: 6,
           repeatDelay: 3,
         }}
+        parentRef={parentRef}
       />
 
       <div className="text-balance relative z-20 mx-auto mb-4 mt-4 max-w-4xl text-center text-3xl font-semibold tracking-tight text-gray-700 dark:text-neutral-300 md:text-7xl">
@@ -163,7 +158,6 @@ const BackgroundGrids = () => {
 const CollisionMechanism = React.forwardRef<
   HTMLDivElement,
   {
-    containerRef: React.RefObject<HTMLDivElement>;
     parentRef: React.RefObject<HTMLDivElement>;
     beamOptions?: {
       initialX?: number;
@@ -177,7 +171,7 @@ const CollisionMechanism = React.forwardRef<
       repeatDelay?: number;
     };
   }
->(({ parentRef, containerRef, beamOptions = {} }, ref) => {
+>(({ parentRef, beamOptions = {} }, ref) => {
   const beamRef = useRef<HTMLDivElement>(null);
   const [collision, setCollision] = useState<{
     detected: boolean;
@@ -187,62 +181,6 @@ const CollisionMechanism = React.forwardRef<
     coordinates: null,
   });
   const [beamKey, setBeamKey] = useState(0);
-  const [cycleCollisionDetected, setCycleCollisionDetected] = useState(false);
-
-  useEffect(() => {
-    const checkCollision = () => {
-      if (
-        beamRef.current &&
-        containerRef.current &&
-        parentRef.current &&
-        !cycleCollisionDetected
-      ) {
-        const beamRect = beamRef.current.getBoundingClientRect();
-        const containerRect = containerRef.current.getBoundingClientRect();
-        const parentRect = parentRef.current.getBoundingClientRect();
-
-        if (beamRect.bottom >= containerRect.top) {
-          const relativeX =
-            beamRect.left - parentRect.left + beamRect.width / 2;
-          const relativeY = beamRect.bottom - parentRect.top;
-
-          setCollision({
-            detected: true,
-            coordinates: {
-              x: relativeX,
-              y: relativeY,
-            },
-          });
-          setCycleCollisionDetected(true);
-          if (beamRef.current) {
-            beamRef.current.style.opacity = "0";
-          }
-        }
-      }
-    };
-
-    const animationInterval = setInterval(checkCollision, 50);
-
-    return () => clearInterval(animationInterval);
-  }, [cycleCollisionDetected, containerRef]);
-
-  useEffect(() => {
-    if (collision.detected && collision.coordinates) {
-      setTimeout(() => {
-        setCollision({ detected: false, coordinates: null });
-        setCycleCollisionDetected(false);
-        // Set beam opacity to 0
-        if (beamRef.current) {
-          beamRef.current.style.opacity = "1";
-        }
-      }, 2000);
-
-      // Reset the beam animation after a delay
-      setTimeout(() => {
-        setBeamKey((prevKey) => prevKey + 1);
-      }, 2000);
-    }
-  }, [collision]);
 
   return (
     <>
